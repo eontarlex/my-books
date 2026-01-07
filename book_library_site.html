@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Моя Бібліотека</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .add-book-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .add-book-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .book-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .book-title {
+            font-size: 1.3em;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .book-author {
+            color: #666;
+            margin-bottom: 8px;
+            font-style: italic;
+        }
+
+        .book-year {
+            color: #999;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .book-status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .status-read {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-reading {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .status-want {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .book-notes {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        .delete-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 12px;
+            font-size: 0.9em;
+            transition: background 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: #d32f2f;
+        }
+
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: white;
+            padding: 60px 20px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Моя Бібліотека</h1>
+            <p class="subtitle">Управляйте своєю колекцією книжок</p>
+        </header>
+
+        <div class="add-book-section">
+            <h2>Додати нову книгу</h2>
+            <form id="addBookForm">
+                <div class="form-group">
+                    <label for="title">Назва книги *</label>
+                    <input type="text" id="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="author">Автор *</label>
+                    <input type="text" id="author" required>
+                </div>
+                <div class="form-group">
+                    <label for="year">Рік видання</label>
+                    <input type="number" id="year" min="1000" max="2025">
+                </div>
+                <div class="form-group">
+                    <label for="status">Статус</label>
+                    <select id="status">
+                        <option value="want">Хочу прочитати</option>
+                        <option value="reading">Читаю зараз</option>
+                        <option value="read">Прочитано</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="notes">Нотатки</label>
+                    <textarea id="notes" placeholder="Ваші думки про книгу..."></textarea>
+                </div>
+                <button type="submit" class="btn">Додати книгу</button>
+            </form>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label>Фільтр:</label>
+                <select id="filterStatus">
+                    <option value="all">Всі книги</option>
+                    <option value="want">Хочу прочитати</option>
+                    <option value="reading">Читаю зараз</option>
+                    <option value="read">Прочитано</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="booksContainer" class="books-grid"></div>
+    </div>
+
+    <script>
+        let books = [];
+
+        function loadBooks() {
+            const saved = localStorage.getItem('myBooks');
+            if (saved) {
+                books = JSON.parse(saved);
+            }
+        }
+
+        function saveBooks() {
+            localStorage.setItem('myBooks', JSON.stringify(books));
+        }
+
+        function addBook(e) {
+            e.preventDefault();
+            
+            const book = {
+                id: Date.now(),
+                title: document.getElementById('title').value,
+                author: document.getElementById('author').value,
+                year: document.getElementById('year').value,
+                status: document.getElementById('status').value,
+                notes: document.getElementById('notes').value
+            };
+
+            books.push(book);
+            saveBooks();
+            displayBooks();
+            
+            document.getElementById('addBookForm').reset();
+        }
+
+        function deleteBook(id) {
+            if (confirm('Ви впевнені, що хочете видалити цю книгу?')) {
+                books = books.filter(book => book.id !== id);
+                saveBooks();
+                displayBooks();
+            }
+        }
+
+        function getStatusText(status) {
+            const statuses = {
+                'want': 'Хочу прочитати',
+                'reading': 'Читаю зараз',
+                'read': 'Прочитано'
+            };
+            return statuses[status] || status;
+        }
+
+        function displayBooks() {
+            const container = document.getElementById('booksContainer');
+            const filter = document.getElementById('filterStatus').value;
+            
+            let filteredBooks = books;
+            if (filter !== 'all') {
+                filteredBooks = books.filter(book => book.status === filter);
+            }
+
+            if (filteredBooks.length === 0) {
+                container.innerHTML = '<div class="empty-state">📖 Поки що немає книжок. Додайте свою першу книгу!</div>';
+                return;
+            }
+
+            container.innerHTML = filteredBooks.map(book => `
+                <div class="book-card">
+                    <div class="book-title">${book.title}</div>
+                    <div class="book-author">Автор: ${book.author}</div>
+                    ${book.year ? `<div class="book-year">Рік: ${book.year}</div>` : ''}
+                    <span class="book-status status-${book.status}">${getStatusText(book.status)}</span>
+                    ${book.notes ? `<div class="book-notes">${book.notes}</div>` : ''}
+                    <button class="delete-btn" onclick="deleteBook(${book.id})">Видалити</button>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('addBookForm').addEventListener('submit', addBook);
+        document.getElementById('filterStatus').addEventListener('change', displayBooks);
+
+        loadBooks();
+        displayBooks();
+    </script>
+</body>
+</html>
