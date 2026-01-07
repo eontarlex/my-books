@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Моя Бібліотека</title>
+    <title>Мої Твори</title>
     <style>
         * {
             margin: 0;
@@ -13,43 +13,94 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
-            padding: 20px;
+            color: #333;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #1e3c72;
+        }
+
+        .hero {
+            text-align: center;
+            color: white;
+            padding: 80px 20px;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 40px 20px;
         }
 
-        header {
-            text-align: center;
+        .section-title {
             color: white;
-            margin-bottom: 40px;
+            font-size: 2em;
+            margin-bottom: 30px;
+            text-align: center;
         }
 
-        h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .subtitle {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-
-        .add-book-section {
+        .admin-panel {
             background: white;
             padding: 30px;
             border-radius: 15px;
+            margin-bottom: 40px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
         }
 
-        .add-book-section h2 {
-            color: #667eea;
+        .admin-panel h2 {
+            color: #1e3c72;
             margin-bottom: 20px;
         }
 
@@ -60,8 +111,8 @@
         label {
             display: block;
             margin-bottom: 5px;
-            color: #333;
             font-weight: 500;
+            color: #333;
         }
 
         input, textarea, select {
@@ -75,16 +126,17 @@
 
         input:focus, textarea:focus, select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #1e3c72;
         }
 
         textarea {
             resize: vertical;
-            min-height: 80px;
+            min-height: 120px;
+            font-family: inherit;
         }
 
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
             padding: 12px 30px;
             border: none;
@@ -96,253 +148,361 @@
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.4);
         }
 
-        .books-grid {
+        .content-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
             margin-top: 20px;
         }
 
-        .book-card {
+        .content-card {
             background: white;
-            padding: 25px;
             border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
             transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .book-card:hover {
+        .content-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
         }
 
-        .book-title {
-            font-size: 1.3em;
-            color: #667eea;
+        .card-type {
+            padding: 8px 15px;
+            font-size: 0.85em;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: white;
+        }
+
+        .type-book { background: #6366f1; }
+        .type-audio { background: #ec4899; }
+        .type-video { background: #14b8a6; }
+        .type-short { background: #f59e0b; }
+
+        .card-content {
+            padding: 25px;
+        }
+
+        .card-title {
+            font-size: 1.4em;
+            color: #1e3c72;
             margin-bottom: 10px;
             font-weight: 600;
         }
 
-        .book-author {
-            color: #666;
-            margin-bottom: 8px;
-            font-style: italic;
-        }
-
-        .book-year {
+        .card-date {
             color: #999;
             font-size: 0.9em;
-            margin-bottom: 5px;
+            margin-bottom: 15px;
         }
 
-        .book-status {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            margin-top: 10px;
-            font-weight: 500;
-        }
-
-        .status-read {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .status-reading {
-            background: #fff3e0;
-            color: #ef6c00;
-        }
-
-        .status-want {
-            background: #e3f2fd;
-            color: #1565c0;
-        }
-
-        .book-notes {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #e0e0e0;
+        .card-description {
             color: #555;
-            font-size: 0.95em;
+            line-height: 1.6;
+            margin-bottom: 15px;
         }
 
-        .delete-btn {
-            background: #f44336;
-            color: white;
-            border: none;
+        .card-text {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            color: #333;
+            line-height: 1.8;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .card-link {
+            color: #1e3c72;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            margin-top: 10px;
+            transition: color 0.3s;
+        }
+
+        .card-link:hover {
+            color: #2a5298;
+            text-decoration: underline;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .copy-btn, .delete-btn {
             padding: 8px 16px;
+            border: none;
             border-radius: 6px;
             cursor: pointer;
-            margin-top: 12px;
             font-size: 0.9em;
             transition: background 0.3s;
         }
 
-        .delete-btn:hover {
-            background: #d32f2f;
+        .copy-btn {
+            background: #10b981;
+            color: white;
         }
 
-        .filters {
+        .copy-btn:hover {
+            background: #059669;
+        }
+
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
+        }
+
+        .filter-section {
             background: white;
             padding: 20px;
             border-radius: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
 
-        .filter-group {
+        .filter-buttons {
             display: flex;
             gap: 15px;
-            align-items: center;
             flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #1e3c72;
+            background: white;
+            color: #1e3c72;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .filter-btn.active {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
         }
 
         .empty-state {
             text-align: center;
             color: white;
-            padding: 60px 20px;
+            padding: 80px 20px;
             font-size: 1.2em;
+        }
+
+        .empty-state span {
+            font-size: 3em;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 15px;
+                font-size: 0.9em;
+            }
+
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>📚 Моя Бібліотека</h1>
-            <p class="subtitle">Управляйте своєю колекцією книжок</p>
-        </header>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">✨ Мої Твори</div>
+            <ul class="nav-links">
+                <li><a href="#home">Головна</a></li>
+                <li><a href="#works">Твори</a></li>
+                <li><a href="#admin">Додати</a></li>
+            </ul>
+        </div>
+    </nav>
 
-        <div class="add-book-section">
-            <h2>Додати нову книгу</h2>
-            <form id="addBookForm">
+    <div class="hero" id="home">
+        <h1>Ласкаво просимо</h1>
+        <p>Тут я ділюся своїми творами: книгами, аудіокнижками, відео та короткими історіями</p>
+    </div>
+
+    <div class="container">
+        <div class="admin-panel" id="admin">
+            <h2>Додати новий твір</h2>
+            <form id="addContentForm">
                 <div class="form-group">
-                    <label for="title">Назва книги *</label>
-                    <input type="text" id="title" required>
-                </div>
-                <div class="form-group">
-                    <label for="author">Автор *</label>
-                    <input type="text" id="author" required>
-                </div>
-                <div class="form-group">
-                    <label for="year">Рік видання</label>
-                    <input type="number" id="year" min="1000" max="2025">
-                </div>
-                <div class="form-group">
-                    <label for="status">Статус</label>
-                    <select id="status">
-                        <option value="want">Хочу прочитати</option>
-                        <option value="reading">Читаю зараз</option>
-                        <option value="read">Прочитано</option>
+                    <label for="type">Тип твору *</label>
+                    <select id="type" required>
+                        <option value="book">📚 Книга</option>
+                        <option value="audio">🎧 Аудіокнижка</option>
+                        <option value="video">🎬 Відео</option>
+                        <option value="short">✍️ Коротка історія</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="notes">Нотатки</label>
-                    <textarea id="notes" placeholder="Ваші думки про книгу..."></textarea>
+                    <label for="title">Назва *</label>
+                    <input type="text" id="title" required placeholder="Назва вашого твору">
                 </div>
-                <button type="submit" class="btn">Додати книгу</button>
+                <div class="form-group">
+                    <label for="description">Короткий опис *</label>
+                    <textarea id="description" required placeholder="Про що цей твір..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="content">Текст твору або опис</label>
+                    <textarea id="content" placeholder="Повний текст або детальний опис..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="link">Посилання (YouTube, SoundCloud, Google Drive тощо)</label>
+                    <input type="url" id="link" placeholder="https://...">
+                </div>
+                <button type="submit" class="btn">Опублікувати твір</button>
             </form>
         </div>
 
-        <div class="filters">
-            <div class="filter-group">
-                <label>Фільтр:</label>
-                <select id="filterStatus">
-                    <option value="all">Всі книги</option>
-                    <option value="want">Хочу прочитати</option>
-                    <option value="reading">Читаю зараз</option>
-                    <option value="read">Прочитано</option>
-                </select>
+        <div id="works">
+            <h2 class="section-title">Мої Твори</h2>
+            
+            <div class="filter-section">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">Всі</button>
+                    <button class="filter-btn" data-filter="book">📚 Книги</button>
+                    <button class="filter-btn" data-filter="audio">🎧 Аудіо</button>
+                    <button class="filter-btn" data-filter="video">🎬 Відео</button>
+                    <button class="filter-btn" data-filter="short">✍️ Історії</button>
+                </div>
             </div>
-        </div>
 
-        <div id="booksContainer" class="books-grid"></div>
+            <div id="contentContainer" class="content-grid"></div>
+        </div>
     </div>
 
     <script>
-        let books = [];
+        let contents = [];
+        let currentFilter = 'all';
 
-        function loadBooks() {
-            const saved = localStorage.getItem('myBooks');
+        function loadContents() {
+            const saved = localStorage.getItem('myContents');
             if (saved) {
-                books = JSON.parse(saved);
+                contents = JSON.parse(saved);
             }
         }
 
-        function saveBooks() {
-            localStorage.setItem('myBooks', JSON.stringify(books));
+        function saveContents() {
+            localStorage.setItem('myContents', JSON.stringify(contents));
         }
 
-        function addBook(e) {
+        function addContent(e) {
             e.preventDefault();
             
-            const book = {
+            const content = {
                 id: Date.now(),
+                type: document.getElementById('type').value,
                 title: document.getElementById('title').value,
-                author: document.getElementById('author').value,
-                year: document.getElementById('year').value,
-                status: document.getElementById('status').value,
-                notes: document.getElementById('notes').value
+                description: document.getElementById('description').value,
+                content: document.getElementById('content').value,
+                link: document.getElementById('link').value,
+                date: new Date().toLocaleDateString('uk-UA')
             };
 
-            books.push(book);
-            saveBooks();
-            displayBooks();
+            contents.unshift(content);
+            saveContents();
+            displayContents();
             
-            document.getElementById('addBookForm').reset();
+            document.getElementById('addContentForm').reset();
+            alert('Твір успішно опубліковано! ✨');
         }
 
-        function deleteBook(id) {
-            if (confirm('Ви впевнені, що хочете видалити цю книгу?')) {
-                books = books.filter(book => book.id !== id);
-                saveBooks();
-                displayBooks();
+        function deleteContent(id) {
+            if (confirm('Ви впевнені, що хочете видалити цей твір?')) {
+                contents = contents.filter(c => c.id !== id);
+                saveContents();
+                displayContents();
             }
         }
 
-        function getStatusText(status) {
-            const statuses = {
-                'want': 'Хочу прочитати',
-                'reading': 'Читаю зараз',
-                'read': 'Прочитано'
-            };
-            return statuses[status] || status;
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Текст скопійовано! 📋');
+            });
         }
 
-        function displayBooks() {
-            const container = document.getElementById('booksContainer');
-            const filter = document.getElementById('filterStatus').value;
+        function getTypeLabel(type) {
+            const labels = {
+                'book': '📚 Книга',
+                'audio': '🎧 Аудіокнижка',
+                'video': '🎬 Відео',
+                'short': '✍️ Коротка історія'
+            };
+            return labels[type] || type;
+        }
+
+        function displayContents() {
+            const container = document.getElementById('contentContainer');
             
-            let filteredBooks = books;
-            if (filter !== 'all') {
-                filteredBooks = books.filter(book => book.status === filter);
+            let filteredContents = contents;
+            if (currentFilter !== 'all') {
+                filteredContents = contents.filter(c => c.type === currentFilter);
             }
 
-            if (filteredBooks.length === 0) {
-                container.innerHTML = '<div class="empty-state">📖 Поки що немає книжок. Додайте свою першу книгу!</div>';
+            if (filteredContents.length === 0) {
+                container.innerHTML = '<div class="empty-state"><span>📭</span>Поки що немає творів у цій категорії</div>';
                 return;
             }
 
-            container.innerHTML = filteredBooks.map(book => `
-                <div class="book-card">
-                    <div class="book-title">${book.title}</div>
-                    <div class="book-author">Автор: ${book.author}</div>
-                    ${book.year ? `<div class="book-year">Рік: ${book.year}</div>` : ''}
-                    <span class="book-status status-${book.status}">${getStatusText(book.status)}</span>
-                    ${book.notes ? `<div class="book-notes">${book.notes}</div>` : ''}
-                    <button class="delete-btn" onclick="deleteBook(${book.id})">Видалити</button>
+            container.innerHTML = filteredContents.map(item => `
+                <div class="content-card">
+                    <div class="card-type type-${item.type}">${getTypeLabel(item.type)}</div>
+                    <div class="card-content">
+                        <div class="card-title">${item.title}</div>
+                        <div class="card-date">${item.date}</div>
+                        <div class="card-description">${item.description}</div>
+                        ${item.content ? `<div class="card-text">${item.content}</div>` : ''}
+                        ${item.link ? `<a href="${item.link}" target="_blank" class="card-link">🔗 Переглянути →</a>` : ''}
+                        <div class="card-actions">
+                            ${item.content ? `<button class="copy-btn" onclick="copyText(\`${item.content.replace(/`/g, '\\`')}\`)">Копіювати текст</button>` : ''}
+                            <button class="delete-btn" onclick="deleteContent(${item.id})">Видалити</button>
+                        </div>
+                    </div>
                 </div>
             `).join('');
         }
 
-        document.getElementById('addBookForm').addEventListener('submit', addBook);
-        document.getElementById('filterStatus').addEventListener('change', displayBooks);
+        document.getElementById('addContentForm').addEventListener('submit', addContent);
 
-        loadBooks();
-        displayBooks();
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                displayContents();
+            });
+        });
+
+        loadContents();
+        displayContents();
     </script>
 </body>
 </html>
